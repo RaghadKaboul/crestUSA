@@ -1,0 +1,364 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Authentication API",
+        "description": "API for handling user authentication and token management",
+        "contact": {
+            "email": "support@example.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "summary": "User Login",
+                "description": "Authenticate the user and generate an access token.",
+                "operationId": "c42b3ad4d278b6e9e78d2a3755573811",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/refresh-token": {
+            "post": {
+                "summary": "Refresh Token",
+                "description": "Generate a new authentication token after revoking old tokens.",
+                "operationId": "c61d4d1aaf2f0ea9b6738c9294fb1e56",
+                "responses": {
+                    "200": {
+                        "description": "New token issued"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "summary": "Logout",
+                "description": "Revoke the user's current access token.",
+                "operationId": "d9dbce9d62d0996971c6a5479779e1f5",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/certificates": {
+            "get": {
+                "summary": "Retrieve all certificates",
+                "description": "Fetch all certificates stored in the system.",
+                "operationId": "7de1c79b253373fa392c467237029dd9",
+                "responses": {
+                    "200": {
+                        "description": "List of certificates"
+                    },
+                    "404": {
+                        "description": "No certificates found"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new certificate",
+                "description": "Store a new certificate in the database.",
+                "operationId": "ea137009b4183a02859e3e2ab8bb5716",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "certificate_number",
+                                    "certificate_holders_name",
+                                    "releas_date",
+                                    "Issuing_authority",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "certificate_number": {
+                                        "type": "integer",
+                                        "example": 12345
+                                    },
+                                    "certificate_holders_name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "releas_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-01"
+                                    },
+                                    "Expiry_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-01-01"
+                                    },
+                                    "Issuing_authority": {
+                                        "type": "string",
+                                        "example": "Certification Board"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Active"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Certificate created successfully"
+                    },
+                    "422": {
+                        "description": "Certificate number already exists"
+                    }
+                }
+            }
+        },
+        "/api/certificates/{id}": {
+            "put": {
+                "summary": "Update an existing certificate",
+                "description": "Modify the details of an existing certificate.",
+                "operationId": "456ba97ae989b849ba5c524fda070817",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Certificate ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "certificate_number": {
+                                        "type": "integer",
+                                        "example": 12345
+                                    },
+                                    "certificate_holders_name": {
+                                        "type": "string",
+                                        "example": "Jane Doe"
+                                    },
+                                    "releas_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-01"
+                                    },
+                                    "Expiry_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-01-01"
+                                    },
+                                    "Issuing_authority": {
+                                        "type": "string",
+                                        "example": "Certification Authority"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Expired"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Certificate updated successfully"
+                    },
+                    "404": {
+                        "description": "Certificate not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a certificate",
+                "description": "Remove a certificate from the database.",
+                "operationId": "4353222e0328b218153f06756fd301d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Certificate ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Certificate deleted successfully"
+                    },
+                    "404": {
+                        "description": "Certificate not found"
+                    }
+                }
+            }
+        },
+        "/certificate/search": {
+            "get": {
+                "tags": [
+                    "Certificates"
+                ],
+                "summary": "البحث عن شهادة عبر رقم الشهادة",
+                "description": "يتم البحث عن الشهادة باستخدام رقمها وإرجاع بياناتها إذا كانت موجودة.",
+                "operationId": "searchCertificate",
+                "parameters": [
+                    {
+                        "name": "certificate_number",
+                        "in": "query",
+                        "description": "رقم الشهادة المطلوب البحث عنه",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "تم العثور على الشهادة بنجاح",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "تم العثور على الشهادة."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "certificate_number": {
+                                                    "type": "string",
+                                                    "example": "12345"
+                                                },
+                                                "issued_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-04-14"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "لم يتم العثور على شهادة بهذا الرقم",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "لم يتم العثور على شهادة بهذا الرقم."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "رقم الشهادة غير موجود في الطلب",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "رقم الشهادة غير موجود في الطلب."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Certificates",
+            "description": "Certificates"
+        }
+    ]
+}
